@@ -25,3 +25,11 @@ label {
 #transparent-loader-wrapper > div {
     visibility: visible !important;
 }
+
+
+#checklist-selected-style
+  .custom-control-input:checked
+  ~ .custom-control-label::before {
+  background-color: #fa7268;
+  border-color: #ea6258;
+}

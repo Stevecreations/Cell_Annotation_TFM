@@ -1,25 +1,23 @@
-
 import dash
 from dash.dependencies import Input, Output, State
 import dash_html_components as html
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
-#import plotly
+# import plotly
 import plotly.express as px
-#import plotly.graph_objs as go
-#import plotly.io as pio
+# import plotly.graph_objs as go
+# import plotly.io as pio
 import os
-#import psutil
-#import requests
+# import psutil
+# import requests
 import tkinter
 from tkinter import filedialog
 from skimage import io
-#from skimage import data
+# from skimage import data
 import json
 import fnmatch
 
 # from skimage import io as skio
-
 
 
 external_stylesheets = [dbc.themes.BOOTSTRAP, "assets/segmentation-style.css"]
@@ -196,7 +194,7 @@ image_tab = [
         children=[
             dbc.CardHeader("Viewer"),
             html.Div(id='output-1'),
-            html.Div(id='output-2'),
+            html.Div(id='show-image-name'),
             dbc.CardBody(
                 [
                     # Wrap dcc.Loading in a div to force transparency when loading
@@ -241,90 +239,167 @@ image_tab = [
 
 tools_tab = [
     dbc.Card(
-        id="sidebar-card",
+        # id="sidebar-card",
         children=[
             dbc.CardHeader("Tools"),
             dbc.CardBody(
                 [
-                    html.H6("State of the Cytoplasm", className="Cytoplasm-title"),
-                    # Label class chosen with buttons
-                    html.Div(
-                        children=[
-                            dbc.ButtonGroup(
-                                [
-                                    dbc.Button(
-                                        "Transparent",
-                                        id="transparent-button",
-                                        outline=True,
-                                        disabled=True,
-                                        style={"background-color": class_to_color(0)}
-                                    ),
-                                    dbc.Button(
-                                        "Granular",
-                                        id="granular-button",
-                                        outline=True,
-                                        disabled=True,
-                                        style={"background-color": class_to_color(1)}
-                                    ),
+                    dbc.FormGroup(
+                        [
+                            dbc.Label("Cell condition:",
+                                      style={"font-weight": "bold", 'margin-left': 15, "font-size": "larger"}),
+                            dcc.RadioItems(
+                                id="cell-condition",
+                                options=[
+                                    {'label': 'Dysplastic', 'value': 'DYSPLASTIC','disabled':True},
+                                    {'label': 'Healthy', 'value': 'HEALTHY','disabled':True},
                                 ],
-                                size="lg",
-                                style={"width": "100%"},
+                                value='HEALTHY',
+                                labelStyle={'display': 'inline-block', 'margin-left': 15},
+                                style={"font-size": "larger", "font-weight": "lighter", 'margin-left': 20},
+
                             ),
-                        ],
+                        ], row=True,
                     ),
-                    html.H6("Chromatin aspect", className="Chromatin-title"),
-                    # Label class chosen with buttons
-                    html.Div(
+
+                    html.Hr(),
+
+                    dbc.Row(
                         children=[
-                            dbc.ButtonGroup(
-                                [
-                                    dbc.Button(
-                                        "Heterogenic",
-                                        id="heterogenic-button",
-                                        outline=True,
-                                        disabled=True,
-                                        style={"background-color": class_to_color(2)}
-                                    ),
-                                    dbc.Button(
-                                        "Homogenic",
-                                        id="homogenic-button",
-                                        outline=True,
-                                        disabled=True,
-                                        style={"background-color": class_to_color(3)}
-                                    ),
-                                ],
-                                size="lg",
-                                style={"width": "100%"},
-                            ),
-                        ],
-                    ),
-                    html.H6("Number of Lobes", className="Lobes-title"),
-                    # Label class chosen with buttons
-                    html.Div(
-                        children=[
-                            dbc.ButtonGroup(
-                                [
-                                    dbc.Button(
-                                        "Abnormal",
-                                        id="normal-button",
-                                        outline=True,
-                                        disabled=True,
-                                        style={"background-color": class_to_color(4)}
-                                    ),
-                                    dbc.Button(
-                                        "Normal",
-                                        id="abnormal-button",
-                                        outline=True,
-                                        disabled=True,
-                                        style={"background-color": class_to_color(5)}
-                                    ),
-                                ],
-                                size="lg",
-                                style={"width": "100%"},
-                            ),
+                            dbc.Col(dbc.Label("Indicator", style={"font-weight": "bold", 'text-align': 'center'}),
+                                    md=8),
+                            dbc.Col(dbc.Label("Priority", style={"font-weight": "bold", 'text-align': 'center'}), md=4),
                         ],
                     ),
 
+                    dbc.Label("State of the Cytoplasm"),
+                    # Label class chosen with buttons
+                    dbc.Row(
+                        children=[
+                            dbc.Col(
+                                dbc.ButtonGroup(
+                                    [
+                                        dbc.Button(
+                                            "Transparent",
+                                            id="transparent-button",
+                                            outline=True,
+                                            disabled=True,
+                                            style={"background-color": class_to_color(0)}
+                                        ),
+                                        dbc.Button(
+                                            "Granular",
+                                            id="granular-button",
+                                            outline=True,
+                                            disabled=True,
+                                            style={"background-color": class_to_color(1)}
+                                        ),
+                                    ],
+                                    size="md",
+                                    style={"width": "100%", 'margin-left': 20},
+                                ),
+                                md=8,
+                                align='center',
+                            ),
+                            dbc.Col(
+                                dcc.RadioItems(
+                                    id="priority-cytoplasm",
+                                    options=[
+                                        {'label': '0', 'value': 0,'disabled':True},
+                                        {'label': '1', 'value': 1,'disabled':True},
+                                        {'label': '2', 'value': 2,'disabled':True},
+                                        {'label': '3', 'value': 3,'disabled':True},
+                                    ],
+                                    value=0,
+                                    labelStyle={'display': 'inline-block', 'margin-left': 15},
+                                ),
+                                md=4,
+                                align='center',
+                            ),
+                        ],
+                    ),
+                    dbc.Label("Chromatin aspect"),
+                    # Label class chosen with buttons
+                    dbc.Row(
+                        children=[
+                            dbc.Col(
+                                dbc.ButtonGroup(
+                                    [
+                                        dbc.Button(
+                                            "Heterogenic",
+                                            id="heterogenic-button",
+                                            outline=True,
+                                            disabled=True,
+                                            style={"background-color": class_to_color(2)}
+                                        ),
+                                        dbc.Button(
+                                            "Homogenic",
+                                            id="homogenic-button",
+                                            outline=True,
+                                            disabled=True,
+                                            style={"background-color": class_to_color(3)}
+                                        ),
+                                    ],
+                                    size="md",
+                                    style={"width": "100%", 'margin-left': 20},
+                                ),
+                                md=8,
+                                align='center',
+                            ),
+                            dbc.Col(
+                                dcc.RadioItems(
+                                    id="priority-chromatin",
+                                    options=[
+                                        {'label': '0', 'value': 0,'disabled':True},
+                                        {'label': '1', 'value': 1,'disabled':True},
+                                        {'label': '2', 'value': 2,'disabled':True},
+                                        {'label': '3', 'value': 3,'disabled':True},
+                                    ],
+                                    value=0,
+                                    labelStyle={'display': 'inline-block', 'margin-left': 15},
+                                ),
+                                md=4,
+                                align='center',
+                            ),
+                        ]
+                    ),
+                    dbc.Label("Number of lobes"),
+                    # Label class chosen with buttons
+                    dbc.Row(
+                        [
+                            dbc.Col(
+                                dcc.RadioItems(
+                                    id="lobe-number",
+                                    options=[
+                                        {'label': 'Hyposegmented (<3)', 'value': 'Hyposegmented','disabled':True},
+                                        {'label': 'Normal (3-5)', 'value': 'Normal','disabled':True},
+                                        {'label': 'Hypersegmented (>5)', 'value': 'Hypersegmented','disabled':True},
+
+                                    ],
+                                    value='',
+                                    # labelStyle={'display': 'inline-block','margin-left': 15},
+                                    labelStyle={'margin-left': 20},
+                                    style={"font-weight": "lighter"},
+                                ),
+                                md=8,
+                                align='center',
+                            ),
+                            dbc.Col(
+                                dcc.RadioItems(
+                                    id="priority-lobes",
+                                    options=[
+                                        {'label': '0', 'value': 0, 'disabled':True},
+                                        {'label': '1', 'value': 1, 'disabled':True},
+                                        {'label': '2', 'value': 2, 'disabled':True},
+                                        {'label': '3', 'value': 3, 'disabled':True},
+                                    ],
+                                    value=0,
+                                    labelStyle={'display': 'inline-block', 'margin-left': 15},
+                                ),
+                                md=4,
+                                align='center',
+                            ),
+                        ],
+                    ),
 
                     html.Hr(),
                     dbc.Form(
@@ -349,20 +424,6 @@ tools_tab = [
                         ]
                     ),
 
-                    html.H6("Cell Condition", className="Cell-Condition-title"),
-                    html.Div(
-                        children=[
-                            dcc.RadioItems(
-                                id="cell-condition",
-                                options=[
-                                    {'label': 'Displastic', 'value': 'DISPLASTIC'},
-                                    {'label': 'Normal', 'value': 'HEALTHY'},
-                                ],
-                                value='Normal',
-                                labelStyle={'display': 'inline-block'},
-                            ),
-                        ],
-                    ),
                 ]
             ),
             dbc.CardFooter(
@@ -406,9 +467,8 @@ tools_tab = [
                             dcc.Checklist(
                                 id="save-image",
                                 options=[
-                                    {'label': 'Save image', 'value': "IMAGE", 'disabled': False},
-                                    {'label': 'Save title', 'value': "TITLE", 'disabled': True},
-                                    {'label': 'Save annotation', 'value': "ANNOTATION", 'disabled': True},
+                                    {'label': 'Save title', 'value': "TITLE", 'disabled': False},
+                                    {'label': 'Save annotation', 'value': "ANNOTATION", 'disabled': False},
                                 ],
                                 value=[],
                             ),
@@ -435,7 +495,9 @@ meta = [
             dcc.Store(id='mark-flag', data=False, storage_type='session'),
             dcc.Store(id='stroke-color-memory', data=DEFAULT_LABEL_CLASS, storage_type='session'),
             dcc.Store(id='save-image-memory', data=False, storage_type='session'),
-            #dcc.Store(id='cell-condition-memory', data=False, storage_type='session'),
+            dcc.Store(id='priority-memory', data=['Priority_list'], storage_type='session'),
+            dcc.Store(id='image_saved_data', storage_type='session'),
+            # dcc.Store(id='cell-condition-memory', data=False, storage_type='session'),
 
         ],
     ),
@@ -450,7 +512,7 @@ app.layout = html.Div(
             [
                 dbc.Row(
                     id="app-content",
-                    children=[dbc.Col(image_tab, md=8), dbc.Col(tools_tab, md=4)],
+                    children=[dbc.Col(image_tab, md=7), dbc.Col(tools_tab, md=5)],
                 ),
                 dbc.Row(dbc.Col(meta)),
             ],
@@ -463,25 +525,73 @@ app.layout = html.Div(
 # endregion
 # we use a callback to toggle the collapse on small screens
 
-####################### Callbacks ###################################
-# region
+# region ####################### Callbacks ###################################
 
+# region  Update Buttons - Callback
 @app.callback(
-    [Output("save-image-memory", "data"),
-     Output("save-image", "options"),
-     ],
-    [Input("save-image", "value"),],
+    [Output("priority-cytoplasm", "value"),
+     Output("priority-chromatin", "value"),
+     Output("priority-lobes", "value"),
+     Output("cell-condition", "value"),
+     Output("lobe-number", "value"),
+     Output("priority-memory", "data"),
+
+    ],
+    [Input("priority-cytoplasm", "value"),
+     Input("priority-chromatin", "value"),
+     Input("priority-lobes", "value"),
+     Input("image_saved_data", "data"),
+    ],
+    [State("priority-memory", "data"),
+     State("cell-condition", "value"),
+     State("lobe-number", "value"),
+    ]
 )
-def update_directory(data):
-    if 'IMAGE' in data:
-        print(True)
-        return True, [{'label': 'Save image', 'value': 'IMAGE', 'disabled': False}, {'label': 'Save title', 'value': 'TITLE', 'disabled': False}, {'label': 'Save annotation', 'value': 'ANNOTATION', 'disabled': False}]
+def update_directory(value_cytoplasm, value_chromatin, value_lobes, image_saved_data,
+                     priority_memory,cell_condition,lobe_number):
+    changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
+    feature_name=[' ','Cytoplasm', 'Chromatin','Lobes']
+    #detect what has changed
+    if 'image_saved_data' not in changed_id:
+        if 'priority-cytoplasm' in changed_id:
+            changed_value=feature_name[1]
+            new_priority=value_cytoplasm
+        elif 'priority-chromatin' in changed_id:
+            changed_value = feature_name[2]
+            new_priority = value_chromatin
+        elif 'priority-lobes' in changed_id:
+            changed_value = feature_name[3]
+            new_priority = value_lobes
+        # remove from list
+        if changed_value in priority_memory:
+            priority_memory.remove(changed_value)
+
+        #insert into listdata exept if priority is zero
+        if new_priority !=0:
+            priority_memory.insert(new_priority,changed_value)
+
+    # update priority Cytoplasm
+    if priority_memory.count(feature_name[1]) != 0:
+        value_cytoplasm = priority_memory.index(feature_name[1])
     else:
-        print(False)
-        return False, [{'label': 'Save image', 'value': 'IMAGE', 'disabled': False}, {'label': 'Save title', 'value': 'TITLE', 'disabled': True}, {'label': 'Save annotation', 'value': 'ANNOTATION', 'disabled': True}]
+        value_cytoplasm = 0
+    # update priority Chromatin
+    if priority_memory.count(feature_name[2]) !=0:
+        value_chromatin = priority_memory.index(feature_name[2])
+    else:
+        value_chromatin = 0
+    # update priority Lobes
+    if priority_memory.count(feature_name[3]) !=0:
+        value_lobes = priority_memory.index(feature_name[3])
+    else:
+        value_lobes =0
 
+    print(value_cytoplasm, value_chromatin, value_lobes, priority_memory, )
+    return value_cytoplasm, value_chromatin, value_lobes, cell_condition,lobe_number, priority_memory
 
-# region Image Path button - Callback
+# endregion
+
+# region Image Path button disabled - Callback
 @app.callback(
     [Output("output-path", "data"),
      Output("next-image-button", "disabled"),
@@ -490,13 +600,46 @@ def update_directory(data):
      Output("granular-button", "disabled"),
      Output("heterogenic-button", "disabled"),
      Output("homogenic-button", "disabled"),
-     Output("normal-button", "disabled"),
-     Output("abnormal-button", "disabled"),
      Output("stroke-width", "disabled"),
+     Output("priority-cytoplasm", "options"),
+     Output("priority-chromatin", "options"),
+     Output("priority-lobes", "options"),
+     Output("cell-condition", "options"),
+     Output("lobe-number", "options"),
      ],
     [Input("path-button", "n_clicks")],
 )
 def select_directory(n1):
+    options_F = [
+                  {'label': '0', 'value': 0, 'disabled': False},
+                  {'label': '1', 'value': 1, 'disabled': False},
+                  {'label': '2', 'value': 2, 'disabled': False},
+                  {'label': '3', 'value': 3, 'disabled': False},
+              ]
+    options_T = [
+                    {'label': '0', 'value': 0, 'disabled': True},
+                    {'label': '1', 'value': 1, 'disabled': True},
+                    {'label': '2', 'value': 2, 'disabled': True},
+                    {'label': '3', 'value': 3, 'disabled': True},
+                ]
+    options_lobes_T = [
+        {'label': 'Hyposegmented (<3)', 'value': 'Hyposegmented', 'disabled': True},
+        {'label': 'Normal (3-5)', 'value': 'Normal', 'disabled': True},
+        {'label': 'Hypersegmented (>5)', 'value': 'Hypersegmented', 'disabled': True},
+        ]
+    options_lobes_F = [
+        {'label': 'Hyposegmented (<3)', 'value': 'Hyposegmented', 'disabled':False},
+        {'label': 'Normal (3-5)', 'value': 'Normal', 'disabled': False},
+        {'label': 'Hypersegmented (>5)', 'value': 'Hypersegmented', 'disabled': False},
+    ]
+    options_cell_T = [
+                  {'label': 'Dysplastic', 'value': 'DYSPLASTIC', 'disabled': True},
+                  {'label': 'Healthy', 'value': 'HEALTHY', 'disabled': True},
+              ]
+    options_cell_F = [
+                  {'label': 'Dysplastic', 'value': 'DYSPLASTIC', 'disabled': False},
+                  {'label': 'Healthy', 'value': 'HEALTHY', 'disabled': False},
+              ]
     if n1:
         root = tkinter.Tk()
         root.lift()
@@ -504,24 +647,46 @@ def select_directory(n1):
         image_path = filedialog.askdirectory()
         root.destroy()
         if os.path.isdir(image_path):
-            return image_path, False, False, False, False, False, False, False, False, False
+            return image_path, False, False, False, False, False, False, False, options_F,options_F,options_F, options_cell_F, options_lobes_F
         else:
             return dash.no_update
     else:
-        return DEFAULT_IMAGE_PATH, True, True, True, True, True, True, True, True, True
+        return DEFAULT_IMAGE_PATH, True, True, True, True, True, True, True, options_T,options_T,options_T, options_cell_T, options_lobes_T
 
 
 # endregion
 
+'''
+@app.callback(
+    [Output("save-image-memory", "data"),
+     Output("save-image", "options"),
+     ],
+    [Input("save-image", "value"), ],
+)
+def update_directory(data):
+    if 'IMAGE' in data:
+        print(True)
+        return True, [{'label': 'Save image', 'value': 'IMAGE', 'disabled': False},
+                      {'label': 'Save title', 'value': 'TITLE', 'disabled': False},
+                      {'label': 'Save annotation', 'value': 'ANNOTATION', 'disabled': False}]
+    else:
+        print(False)
+        return False, [{'label': 'Save image', 'value': 'IMAGE', 'disabled': False},
+                       {'label': 'Save title', 'value': 'TITLE', 'disabled': True},
+                       {'label': 'Save annotation', 'value': 'ANNOTATION', 'disabled': True}]
+'''
+
+
+#region Show file path on image tab - Callback
 @app.callback(
     Output("output-1", "children"),
     [Input("output-path", "data")],
 )
 def update_directory(data):
     return ("FILE PATH: " + data)
+#endregion
 
-
-# image name callback
+# region Show image name on image tab - Callback
 @app.callback(
     Output("directory-images", "data"),
     [Input("output-path", "data")],
@@ -533,10 +698,10 @@ def directory_images(indata):
             if fnmatch.fnmatch(name, '*.jpg') and not fnmatch.fnmatch(name, '*annotation.jpg'):
                 filelist.append(name)
         return filelist
-
+#endregion
 
 @app.callback(
-    [Output("output-2", "children"),
+    [Output("show-image-name", "children"),
      Output("index-images", "data"),
      Output("graph", "figure"),
      Output("masks", "data"),
@@ -551,8 +716,8 @@ def directory_images(indata):
      Input("granular-button", "n_clicks"),
      Input("heterogenic-button", "n_clicks"),
      Input("homogenic-button", "n_clicks"),
-     Input("normal-button", "n_clicks"),
-     Input("abnormal-button", "n_clicks"),
+     # Input("normal-button", "n_clicks"),
+     # Input("abnormal-button", "n_clicks"),
 
      ],
     [State("index-images", "data"),  # index of images in the file
@@ -564,11 +729,13 @@ def directory_images(indata):
      State("stroke-color-memory", "data"),
      State("save-image", "value"),
      State("cell-condition", "value"),
+     State("priority-memory", "data"),
+     State("lobe-number","value"),
      ],
 )
 def change_image(next_b, prev_b, path_2, stroke_width_value, graph_relayoutData,
-                 transparent_but, granular_but, heterogenic_but, homogenic_but, normal_but, abnormal_but,
-                 i, data, path, masks_data, figure, mark_flag, stroke_color_memory, save_image, cell_condition):
+                 transparent_but, granular_but, heterogenic_but, homogenic_but,
+                 i, data, path, masks_data, figure, mark_flag, stroke_color_memory, save_image, cell_condition, priority_list, lobe_number):
     # check what has triggered the calback
     changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
     stroke_width = int(round(2 ** (stroke_width_value)))
@@ -583,6 +750,8 @@ def change_image(next_b, prev_b, path_2, stroke_width_value, graph_relayoutData,
                               shapes=masks_data,
                               save_image=save_image,
                               condition=cell_condition,
+                              priority=priority_list,
+                              lobe_info=lobe_number,
                               )
 
         # update image index
@@ -608,7 +777,7 @@ def change_image(next_b, prev_b, path_2, stroke_width_value, graph_relayoutData,
                 stroke_color=class_to_color(stroke_color_memory),
                 stroke_width=stroke_width,
             )
-            masks_data=[]
+            masks_data = []
         mark_flag = False
         return ("FILE NAME: " + data[image_index]), image_index, fig_out, masks_data, mark_flag, stroke_color_memory
 
@@ -620,6 +789,8 @@ def change_image(next_b, prev_b, path_2, stroke_width_value, graph_relayoutData,
                               shapes=masks_data,
                               save_image=save_image,
                               condition=cell_condition,
+                              priority=priority_list,
+                              lobe_info=lobe_number,
                               )
         # update image index
         image_index = i - 1
@@ -706,37 +877,61 @@ def change_image(next_b, prev_b, path_2, stroke_width_value, graph_relayoutData,
         return ("FILE NAME: " + data[image_index]), image_index, fig_out, masks_data, mark_flag, stroke_color_memory
 
 
-def save_image_annotation(mark_flag, path, data_name, shapes, save_image, condition):
+def save_image_annotation(mark_flag, path, data_name, shapes, save_image, condition, priority, lobe_info):
     # check existance of anotation
+    export_image=False
 
     if mark_flag:  # annotation is true
+        images_path = os.path.join(os.getcwd(), path, data_name)
+        fig = px.imshow(io.imread(images_path))
+        fig.update_xaxes(visible=False)
+        fig.update_yaxes(visible=False)
+        if 'TITLE' in save_image:
+            print('Title')
+            Image_name = data_name + '<br>'
+            Cell_condition = 'Status:' + condition + '<br>'
+            Lobe_condition = 'N lobes:' + lobe_info + '<br>'
+            if len(priority) > 1:
+                First_status = 'First:' + priority[1] + '<br>'
+            else:
+                First_status= ' '
+            if len(priority) > 2:
+                Second_status = 'Second:' + priority[2] +'<br>'
+            else:
+                Second_status= ' '
 
-        # Save image
-        if 'IMAGE' in save_image:
-            images_path = os.path.join(os.getcwd(), path, data_name)
-            fig = px.imshow(io.imread(images_path))
-            fig.update_xaxes(visible=False)
-            fig.update_yaxes(visible=False)
-            if 'ANNOTATION' in save_image:
-                print('annotation')
-                fig.update_layout(
-                    margin=dict(l=0, r=0, b=0, t=0, pad=0),
-                    shapes=shapes["shapes"],
-                )
-            if 'TITLE' in save_image:
-                print('Title')
-                fig.update_layout(
-                    title={
-                        'text': data_name +' - ' + condition,
-                        'y':0.9,
-                        'x':0.1,
-                        'xref': 'paper',
-                        'yref': 'paper'}
-                )
-            save_to_image = os.path.join(os.getcwd(), path,data_name[:-4]+"_annotation"+data_name[-4:])
-            fig.write_image(save_to_image,engine="kaleido")
+            if len(priority) >3:
+                Third_status = 'Third:' + priority[3] +'<br>'
+            else:
+                Third_status = ' '
+
+            text = Image_name + Cell_condition + Lobe_condition + First_status + Second_status + Third_status
+            fig.add_annotation(
+                x=0.1,
+                y=0.8,
+                text=text,
+                xref="paper",
+                yref="paper",
+                showarrow=False,
+                font_size=10,
+                align="left",
+            ),
+            export_image=True
+        if 'ANNOTATION' in save_image:
+            print('annotation')
+            fig.update_layout(
+                margin=dict(l=0, r=0, b=0, t=0, pad=0),
+                shapes=shapes["shapes"],
+            )
+            export_image=True
+        if export_image:
+            save_to_image = os.path.join(os.getcwd(), path, data_name[:-4] + "_annotation" + data_name[-4:])
+            fig.write_image(save_to_image, engine="kaleido")
 
         # save data
+        shapes['priorities']=priority,
+        shapes['lobes']=lobe_info,
+        shapes['cellstatus']= condition,
         save_json = os.path.join(os.getcwd(), path, data_name[:-4] + "_json.txt")
         with open(save_json, 'w') as outfile:
             json.dump(shapes, outfile)
