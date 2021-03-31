@@ -675,15 +675,16 @@ def select_directory(n1):
               ]
     if n1:
 
-        root = tkinter.Tk()
-        root.lift()
-        root.withdraw()
-        image_path = filedialog.askdirectory()
-        root.destroy()
+        #root = tkinter.Tk()
+        #root.lift()
+        #root.withdraw()
+        #image_path = filedialog.askdirectory()
+        #root.destroy()
 
         #image_path='C:/Users/shern/Google Drive/UPC/TFM/10_Images/3_test/3_test/dysplastic'
-        #image_path='/usr/src/app/data'
-        if os.path.isdir(image_path):
+        image_path='data'
+        print('/usr/src/app'+image_path)
+        if os.path.isdir('/usr/src/app/'+image_path):
             return image_path, False, False, False, False, False, False, False, options_F,options_F,options_F, options_cell_F, options_lobes_F
         else:
             return dash.no_update

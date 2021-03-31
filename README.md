@@ -20,7 +20,7 @@ source myvenv/bin/activate
 Install the requirements
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirementsold.txt
 ```
 
 Run the app. An IP address where you can view the app in your browser will be
