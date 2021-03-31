@@ -1,0 +1,8 @@
+# files to ignore
+app_V2.py
+app_V3.py
+app_V4.py
+README.md
+requirements_old.txt
+.cache
+

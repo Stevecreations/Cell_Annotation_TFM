@@ -20,14 +20,14 @@ Other factors to bear in mind are:
 ![Healthy cell vs Dysplastic cell](/assets/images/healthy_vs_displastic.jpg)
 
 This app allows the user to annotate and classify areas in an image. 
-- Select an image directory
 - Navigate the images in directory 
 - Freehand draw, using the mouse to highlight specific areas of the image.
-- Select annotation type Cytoplasm(Granules / Transparent), Chromatin (Heterogenic / Homogenic), Nº of Lobes (Normal / Abnormal)
+- Select annotation type Cytoplasm(Granular / Transparent), Chromatin (Heterogenic / Homogenic), Nº of Lobes (Hyposegmented/ Normal / Hypersegmented)
+- Select the priority of each characteristic when deciding if a cell is Healthy or presents Dysplacia.
 - Export the annotations made as a txt file (json format) and as an image.
 
 ## How to use this app
-The first step is to select the path to the directory where the images are stored by clicking on `Image Path`. A pop up explorer window will appear and allow the user to navigate and select the correct directory.
+The first step is to update the path directoryehre the images are stores by clicking on `Update Image Path`. 
 
 To annotate the image, first select the annotation label you want to apply: 
 
@@ -45,7 +45,17 @@ Additional annotations can be made by selecting a new label and highlighting the
 
 ![Screenshot of_additional_annotation](/assets/images/additional_annotation.jpg)
 
+In order to classify the images correctly, it is important to select the decision criteria priority by clicking on the radio butons  `priority - 0(null) / 1(max) / 2 / 3(min)`
+
+The user can also state if a cell is dysplactic or healthy by the redio button  `Cell condition`
+
+![Screenshot of_Cell_condition](/assets/images/cell_condition.jpg)
+
 To select a different image the press on the `previous` and `next`. The current annotations made on the image will be stored in a txt file in the same directory as the image source. An image with the annotations will also be stored will aso be stored .
+
+![Screenshot of_Navigation](/assets/images/navigation.jpg)
+
+To download an image with the annotations and/or info entered press on the check boxes `Save annotation` `Save_title` respectively
 
 To erase an already made annotation click of the desired annotation and then hit the errase button on the top of the image editor.
 

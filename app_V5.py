@@ -16,6 +16,7 @@ from skimage import io
 # from skimage import data
 import json
 import fnmatch
+import copy
 
 # from skimage import io as skio
 
@@ -461,7 +462,7 @@ tools_tab = [
                             dbc.ButtonGroup(
                                 [
                                     dbc.Button(
-                                        "Image Path",
+                                        "Update Image Path",
                                         id="path-button",
                                         outline=True,
                                     ),
@@ -827,7 +828,9 @@ def change_image(next_b, prev_b, path_2, stroke_width_value, graph_relayoutData,
             image_saved_data = masks_data
         mark_flag = False
         print(masks_data)
-        return ("FILE NAME: " + data[image_index]), image_index, fig_out, masks_data, mark_flag, stroke_color_memory,image_saved_data
+        return_val=copy.deepcopy(image_index)
+        return_val=return_val +1
+        return ("FILE NAME: " + data[image_index] +' - '+ str(return_val) + '/'+ str(len(data))), image_index, fig_out, masks_data, mark_flag, stroke_color_memory,image_saved_data
 
     elif 'previous-image-button' in changed_id:
         # save current data
@@ -867,7 +870,9 @@ def change_image(next_b, prev_b, path_2, stroke_width_value, graph_relayoutData,
             image_saved_data = masks_data
         mark_flag = False
         print(masks_data)
-        return ("FILE NAME: " + data[image_index]), (image_index), fig_out, masks_data, mark_flag, stroke_color_memory,image_saved_data
+        return_val = copy.deepcopy(image_index)
+        return_val=return_val+1
+        return ("FILE NAME: " + data[image_index] +' - '+ str(return_val) + '/'+ str(len(data))), (image_index), fig_out, masks_data, mark_flag, stroke_color_memory,image_saved_data
 
     elif 'directory-images' in changed_id:
         print(i)
@@ -894,7 +899,9 @@ def change_image(next_b, prev_b, path_2, stroke_width_value, graph_relayoutData,
                 stroke_width=stroke_width,
             )
         mark_flag = False
-        return ("FILE NAME: " + data[image_index]), (image_index), fig_out, masks_data, mark_flag, stroke_color_memory,image_saved_data
+        return_val = copy.deepcopy(image_index)
+        return_val=return_val+1
+        return ("FILE NAME: " + data[image_index] +' - '+ str(return_val) + '/'+ str(len(data))), (image_index), fig_out, masks_data, mark_flag, stroke_color_memory,image_saved_data
     else:
         image_index = i
 
@@ -929,7 +936,9 @@ def change_image(next_b, prev_b, path_2, stroke_width_value, graph_relayoutData,
             stroke_width=stroke_width,
             shapes=masks_data["shapes"]
         )
-        return ("FILE NAME: " + data[image_index]), image_index, fig_out, masks_data, mark_flag, stroke_color_memory,dash.no_update
+        return_val = copy.deepcopy(image_index)
+        return_val= return_val+1
+        return ("FILE NAME: " + data[image_index] +' - '+ str(return_val) + '/'+ str(len(data))), image_index, fig_out, masks_data, mark_flag, stroke_color_memory,dash.no_update
 
 
 def save_image_annotation(mark_flag, path, data_name, shapes, save_image, condition, priority, lobe_info):

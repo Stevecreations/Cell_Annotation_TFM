@@ -1,7 +1,15 @@
 # Dash Interactive Image Segmentation
 
 ## About this app
+There are different versions of the app
 
+The currect working versions are:
+    - app_V4.py (works with windows file system)
+    - app_v5.py (works with unix file system - version to create the docker)
+
+The folder assets contains all the necessary assets for the app to run.
+
+The dokerfile is used to convert the app into a docker image.
 
 ## How to run this app locally
 
@@ -20,7 +28,7 @@ source myvenv/bin/activate
 Install the requirements
 
 ```bash
-pip install -r requirementsold.txt
+pip install -r requirements.txt
 ```
 
 Run the app. An IP address where you can view the app in your browser will be
