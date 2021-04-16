@@ -35,7 +35,7 @@ DEBUG = False
 
 # -------------------- CONFIGURATION ------------------------
 DEFAULT_IMAGE_PATH = "assets/images"
-DEFAULT_STROKE_WIDTH = 2  # gives line width of 2^3 = 8
+DEFAULT_STROKE_WIDTH = 4  # gives line width of 2^3 = 8
 
 DEFAULT_LABEL_CLASS = 0
 NUM_LABEL_CLASSES = 6
@@ -63,13 +63,15 @@ def make_default_figure(
 ):
     fig = px.imshow(io.imread(images))
     fig.update_layout(
-        dragmode="drawopenpath",
+        dragmode="drawclosedpath",
         margin=dict(l=0, r=0, b=0, t=0, pad=4),
         shapes=shapes,
         newshape=dict(
             line_color=stroke_color,
             line_width=stroke_width,
-            opacity=0.5
+            opacity=0.5,
+            fillcolor= stroke_color,
+
         )
     )
     return fig
@@ -217,17 +219,25 @@ image_tab = [
                                         figure=make_default_figure(),
                                         config={
                                             "modeBarButtonsToAdd": [
-                                                "drawrect",
+                                                #"drawrect",
                                                 "drawopenpath",
                                                 "drawclosedpath",
                                                 "eraseshape",
                                             ],
                                             "modeBarButtonsToRemove": [
-                                                "downloadImage",
-                                                "togglespikelines",
-                                                "autoscale",
+                                                "toImage",
+                                                "toggleSpikelines",
+                                                "autoScale2d",
+                                                "zoomInGeo",
+                                                "zoomOutGeo",
+                                                "toggleHover",
+                                                "hoverClosestCartesian",
+                                                "hoverCompareCartesian",
+                                                "zoomIn2d",
+                                                "zoomOut2d"
                                             ],
                                         },
+                                        style={"height": "70vh"},
                                     ),
                                 ],
                             )
@@ -518,13 +528,14 @@ app.layout = html.Div(
             [
                 dbc.Row(
                     id="app-content",
-                    children=[dbc.Col(image_tab, md=7), dbc.Col(tools_tab, md=5)],
+                    children=[dbc.Col(image_tab, md=7,style={"height": "100%"}), dbc.Col(tools_tab, md=5,style={"height": "100%"})],
                 ),
                 dbc.Row(dbc.Col(meta)),
             ],
             fluid=True,
         ),
-    ]
+    ],
+    style={"height": "100vh"},
 )
 
 
@@ -977,7 +988,7 @@ def save_image_annotation(mark_flag, path, data_name, shapes, save_image, condit
                 xref="paper",
                 yref="paper",
                 showarrow=False,
-                font_size=10,
+                font_size=15,
                 align="left",
             ),
             export_image=True
