@@ -66,6 +66,7 @@ def make_default_figure(
         dragmode="drawclosedpath",
         margin=dict(l=0, r=0, b=0, t=0, pad=4),
         shapes=shapes,
+        uirevision=images,
         newshape=dict(
             line_color=stroke_color,
             line_width=stroke_width,
@@ -74,6 +75,10 @@ def make_default_figure(
 
         )
     )
+    fig.update_layout(
+        dragmode="drawclosedpath",
+    )
+
     return fig
 
 
@@ -200,7 +205,7 @@ image_tab = [
     dbc.Card(
         id="segmentation-card",
         children=[
-            dbc.CardHeader("Viewer"),
+            dbc.CardHeader("Viewer", style={ "font-size": "larger"}),
             html.Div(id='output-1'),
             html.Div(id='show-image-name'),
             dbc.CardBody(
@@ -218,11 +223,15 @@ image_tab = [
                                         id="graph",
                                         figure=make_default_figure(),
                                         config={
+                                            "displayModeBar" : True,
+                                            "displaylogo" : False,
                                             "modeBarButtonsToAdd": [
                                                 #"drawrect",
                                                 "drawopenpath",
                                                 "drawclosedpath",
                                                 "eraseshape",
+                                                "zoomIn2d",
+                                                "zoomOut2d"
                                             ],
                                             "modeBarButtonsToRemove": [
                                                 "toImage",
@@ -233,8 +242,8 @@ image_tab = [
                                                 "toggleHover",
                                                 "hoverClosestCartesian",
                                                 "hoverCompareCartesian",
-                                                "zoomIn2d",
-                                                "zoomOut2d"
+                                                "zoom2d"
+
                                             ],
                                         },
                                         style={"height": "70vh"},
@@ -257,7 +266,7 @@ tools_tab = [
     dbc.Card(
         # id="sidebar-card",
         children=[
-            dbc.CardHeader("Tools"),
+            dbc.CardHeader("Tools",style={ "font-size": "larger"}),
             dbc.CardBody(
                 [
                     dbc.FormGroup(
@@ -282,13 +291,13 @@ tools_tab = [
 
                     dbc.Row(
                         children=[
-                            dbc.Col(dbc.Label("Indicator", style={"font-weight": "bold", 'text-align': 'center'}),
+                            dbc.Col(dbc.Label("Indicator", style={"font-weight": "bold", 'text-align': 'center',"font-size": "larger"}),
                                     md=8),
-                            dbc.Col(dbc.Label("Priority", style={"font-weight": "bold", 'text-align': 'center'}), md=4),
+                            dbc.Col(dbc.Label("Priority", style={"font-weight": "bold", 'text-align': 'center',"font-size": "larger"}), md=4),
                         ],
                     ),
 
-                    dbc.Label("State of the Cytoplasm"),
+                    dbc.Label("State of the Cytoplasm",style={"font-size": "larger"}),
                     # Label class chosen with buttons
                     dbc.Row(
                         children=[
@@ -300,6 +309,7 @@ tools_tab = [
                                             id="transparent-button",
                                             outline=True,
                                             disabled=True,
+                                            color='dark',
                                             style={"background-color": class_to_color(0)}
                                         ),
                                         dbc.Button(
@@ -307,10 +317,11 @@ tools_tab = [
                                             id="granular-button",
                                             outline=True,
                                             disabled=True,
+                                            color='dark',
                                             style={"background-color": class_to_color(1)}
                                         ),
                                     ],
-                                    size="md",
+                                    size="lg",
                                     style={"width": "100%", 'margin-left': 20},
                                 ),
                                 md=8,
@@ -327,13 +338,14 @@ tools_tab = [
                                     ],
                                     value=0,
                                     labelStyle={'display': 'inline-block', 'margin-left': 15},
+                                    style={"font-size": "larger"}
                                 ),
                                 md=4,
                                 align='center',
                             ),
                         ],
                     ),
-                    dbc.Label("Chromatin aspect"),
+                    dbc.Label("Chromatin aspect",style={"font-size": "larger"}),
                     # Label class chosen with buttons
                     dbc.Row(
                         children=[
@@ -345,6 +357,7 @@ tools_tab = [
                                             id="heterogenic-button",
                                             outline=True,
                                             disabled=True,
+                                            color='dark',
                                             style={"background-color": class_to_color(2)}
                                         ),
                                         dbc.Button(
@@ -352,10 +365,11 @@ tools_tab = [
                                             id="homogenic-button",
                                             outline=True,
                                             disabled=True,
+                                            color='dark',
                                             style={"background-color": class_to_color(3)}
                                         ),
                                     ],
-                                    size="md",
+                                    size="lg",
                                     style={"width": "100%", 'margin-left': 20},
                                 ),
                                 md=8,
@@ -372,13 +386,14 @@ tools_tab = [
                                     ],
                                     value=0,
                                     labelStyle={'display': 'inline-block', 'margin-left': 15},
+                                    style={"font-size": "larger"}
                                 ),
                                 md=4,
                                 align='center',
                             ),
                         ]
                     ),
-                    dbc.Label("Number of lobes"),
+                    dbc.Label("Number of lobes",style={"font-size": "larger"}),
                     # Label class chosen with buttons
                     dbc.Row(
                         [
@@ -394,7 +409,7 @@ tools_tab = [
                                     value='',
                                     # labelStyle={'display': 'inline-block','margin-left': 15},
                                     labelStyle={'margin-left': 20},
-                                    style={"font-weight": "lighter"},
+                                    style={"font-weight": "lighter","font-size": "larger"},
                                 ),
                                 md=8,
                                 align='center',
@@ -410,6 +425,7 @@ tools_tab = [
                                     ],
                                     value=0,
                                     labelStyle={'display': 'inline-block', 'margin-left': 15},
+                                    style={"font-size": "larger"}
                                 ),
                                 md=4,
                                 align='center',
@@ -425,6 +441,7 @@ tools_tab = [
                                     dbc.Label(
                                         "Width of annotation paintbrush",
                                         html_for="stroke-width",
+                                        style={"font-size": "larger"}
                                     ),
                                     # Slider for specifying stroke width
                                     dcc.Slider(

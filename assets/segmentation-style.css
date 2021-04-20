@@ -33,3 +33,11 @@ label {
   background-color: #fa7268;
   border-color: #ea6258;
 }
+
+#graph .modebar {
+    position: relative;
+    bottom: 110%;
+    left: 94%;
+    scale:180%;
+
+}
