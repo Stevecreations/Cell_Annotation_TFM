@@ -15,7 +15,7 @@ EXPOSE 8050
 
 
 #Execute with python the application
-CMD ["python", "./app_V5.py"]
+CMD ["python", "./app_V6_lin.py"]
 
 #Build instruction to launch from terminal
 
